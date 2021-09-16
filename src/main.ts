@@ -10,7 +10,7 @@ const NPM_INSTALL_COMMAND = 'npm install --save-dev @thundra/core'
 const YARN_INSTALL_COMMAND = 'yarn add --dev @thundra/core'
 */
 
-const thundraPackage = './__tmp_/@thundra'
+const thundraPackage = '__tmp_/@thundra'
 
 const apikey: string = core.getInput('apikey')
 const project_id: string = core.getInput('project_id')
