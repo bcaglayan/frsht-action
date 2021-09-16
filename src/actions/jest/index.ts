@@ -20,5 +20,7 @@ export default async function run(): Promise<void> {
         ? JEST_DEFAULT_ARGUMENTS.push(THUNDRA_JEST_JSDOM_ENVIRONMENT)
         : undefined
 
-    await runTestHelper.runTests(command, JEST_DEFAULT_ARGUMENTS)
+    const args = runTestHelper.isYarnRepo() ? JEST_DEFAULT_ARGUMENTS : ['--', ...JEST_DEFAULT_ARGUMENTS]
+
+    await runTestHelper.runTests(command, args)
 }

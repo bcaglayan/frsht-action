@@ -134,7 +134,8 @@ function run() {
             : environment === 'jsdom'
                 ? JEST_DEFAULT_ARGUMENTS.push(THUNDRA_JEST_JSDOM_ENVIRONMENT)
                 : undefined;
-        yield runTestHelper.runTests(command, JEST_DEFAULT_ARGUMENTS);
+        const args = runTestHelper.isYarnRepo() ? JEST_DEFAULT_ARGUMENTS : ['--', ...JEST_DEFAULT_ARGUMENTS];
+        yield runTestHelper.runTests(command, args);
     });
 }
 exports.default = run;
