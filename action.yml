@@ -12,7 +12,7 @@ inputs:
     required: false
     description: "Framework to run your tests"
     default: "jest"
-  environemnt:
+  environment:
     required: false
     description: "Framework to run your tests"
     default: "node"
