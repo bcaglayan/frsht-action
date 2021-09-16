@@ -1,0 +1,25 @@
+name: "Thundra Foresight JS Action"
+description: "Thundra Foresight JS Action"
+author: "bcaglayan <batuhan@thundra.io>"
+inputs:
+  apikey:
+    required: false
+    description: "Thundra's API Key"
+  project_id:
+    required: false
+    description: "Thundra's Test Project ID"
+  framework:
+    required: false
+    description: "Framework to run your tests"
+  environemnt:
+    required: false
+    description: "Framework to run your tests"
+  command:
+    required: false
+    description: "Command to run your tests"
+runs:
+  using: "node12"
+  main: "dist/index.js"
+branding:
+  icon: "cloud-lightning"
+  color: "yellow"
