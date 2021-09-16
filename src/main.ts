@@ -49,7 +49,7 @@ async function run(): Promise<void> {
 
         // await exec(thundraInstallCmd, [], { ignoreReturnCode: true })
 
-        core.info(`[Thundra] @thundra/core installed...`)
+        core.info(`[Thundra] @thundra/core installed`)
 
         const action: Function | undefined = actions.getAction(framework)
         if (!action) {
