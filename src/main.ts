@@ -43,7 +43,8 @@ async function run(): Promise<void> {
     try {
         core.info(`[Thundra] Initializing the Thundra Action....`)
 
-        await exec.exec(`sh -c echo $PWD"`)
+        await exec.exec('echo $(pwd)')
+        await exec.exec(`sh -c echo $(pwd)"`)
         await exec.exec(`sh -c "cp -R ${thundraPackage} ./node_modules"`)
 
         // const thundraInstallCmd = isYarnRepo() ? YARN_INSTALL_COMMAND : NPM_INSTALL_COMMAND

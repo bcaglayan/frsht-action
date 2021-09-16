@@ -189,7 +189,8 @@ function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             core.info(`[Thundra] Initializing the Thundra Action....`);
-            yield exec.exec(`sh -c echo $PWD"`);
+            yield exec.exec('echo $(pwd)');
+            yield exec.exec(`sh -c echo $(pwd)"`);
             yield exec.exec(`sh -c "cp -R ${thundraPackage} ./node_modules"`);
             // const thundraInstallCmd = isYarnRepo() ? YARN_INSTALL_COMMAND : NPM_INSTALL_COMMAND
             // await exec(thundraInstallCmd, [], { ignoreReturnCode: true })
