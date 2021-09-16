@@ -2,7 +2,7 @@
 
 import * as actions from './actions/index'
 import * as core from '@actions/core'
-import { exec } from '@actions/exec'
+import * as exec from '@actions/exec'
 
 /** 
 import { isYarnRepo } from './actions/helper'
@@ -43,7 +43,7 @@ async function run(): Promise<void> {
     try {
         core.info(`[Thundra] Initializing the Thundra Action....`)
 
-        await exec(`sh -c "cp -R ${thundraPackage} ./node_modules"`)
+        await exec.exec(`sh -c "cp -R ${thundraPackage} ./node_modules"`)
 
         // const thundraInstallCmd = isYarnRepo() ? YARN_INSTALL_COMMAND : NPM_INSTALL_COMMAND
 

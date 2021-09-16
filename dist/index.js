@@ -21,7 +21,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.runTests = exports.isYarnRepo = void 0;
-const exec_1 = __webpack_require__(514);
+const exec_1 = __importDefault(__webpack_require__(514));
 const fs_1 = __importDefault(__webpack_require__(747));
 function isYarnRepo() {
     return fs_1.default.existsSync('yarn.lock');
@@ -29,7 +29,7 @@ function isYarnRepo() {
 exports.isYarnRepo = isYarnRepo;
 function runTests(command, args, envVariables = {}) {
     return __awaiter(this, void 0, void 0, function* () {
-        return (0, exec_1.exec)(command, args, {
+        return exec_1.default.exec(command, args, {
             env: Object.assign(Object.assign({}, process.env), envVariables)
         });
     });
@@ -159,10 +159,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const actions = __importStar(__webpack_require__(24));
 const core = __importStar(__webpack_require__(186));
-const exec_1 = __webpack_require__(514);
-const helper_1 = __webpack_require__(884);
-const NPM_INSTALL_COMMAND = 'npm install --save-dev @thundra/core';
-const YARN_INSTALL_COMMAND = 'yarn add --dev @thundra/core';
+const exec = __importStar(__webpack_require__(514));
+/**
+import { isYarnRepo } from './actions/helper'
+const NPM_INSTALL_COMMAND = 'npm install --save-dev @thundra/core'
+const YARN_INSTALL_COMMAND = 'yarn add --dev @thundra/core'
+*/
+const thundraPackage = './__tmp_/@thundra';
 const apikey = core.getInput('apikey');
 const project_id = core.getInput('project_id');
 const framework = core.getInput('framework');
@@ -186,9 +189,10 @@ function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             core.info(`[Thundra] Initializing the Thundra Action....`);
-            const thundraInstallCmd = (0, helper_1.isYarnRepo)() ? YARN_INSTALL_COMMAND : NPM_INSTALL_COMMAND;
-            yield (0, exec_1.exec)(thundraInstallCmd, [], { ignoreReturnCode: true });
-            core.info(`[Thundra] @thundra/core installed...`);
+            yield exec.exec(`sh -c "cp -R ${thundraPackage} ./node_modules"`);
+            // const thundraInstallCmd = isYarnRepo() ? YARN_INSTALL_COMMAND : NPM_INSTALL_COMMAND
+            // await exec(thundraInstallCmd, [], { ignoreReturnCode: true })
+            core.info(`[Thundra] @thundra/core installed`);
             const action = actions.getAction(framework);
             if (!action) {
                 core.warning(`There is no defined action for framework: ${framework}`);

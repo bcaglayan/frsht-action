@@ -1,4 +1,4 @@
-import { exec } from '@actions/exec'
+import exec from '@actions/exec'
 
 import fs from 'fs'
 
@@ -7,7 +7,7 @@ export function isYarnRepo(): boolean {
 }
 
 export async function runTests(command: string, args: string[], envVariables = {}): Promise<number> {
-    return exec(command, args, {
+    return exec.exec(command, args, {
         env: {
             ...process.env,
             ...envVariables
