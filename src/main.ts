@@ -27,7 +27,7 @@ core.exportVariable('THUNDRA_AGENT_TEST_PROJECT_ID', project_id)
 
 async function run(): Promise<void> {
     try {
-        core.info(`[Thundra] Initializing the Thundra Action...`)
+        core.info(`[Thundra] Initializing the Thundra Action....`)
         core.setOutput('framework', framework)
 
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
