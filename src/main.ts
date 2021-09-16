@@ -13,7 +13,7 @@ const project_id: string = core.getInput('project_id')
 const framework: string = core.getInput('framework')
 const agent_version: string = core.getInput('agent_version')
 
-const thundraDep = agent_version ? `@thundra/core:${agent_version}` : '@thundra/core'
+const thundraDep = agent_version ? `@thundra/core@${agent_version}` : '@thundra/core'
 const NPM_INSTALL_COMMAND = `npm install --save-dev ${thundraDep}`
 const YARN_INSTALL_COMMAND = `yarn add --dev ${thundraDep}`
 
