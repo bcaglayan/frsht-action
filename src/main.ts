@@ -45,7 +45,7 @@ async function run(): Promise<void> {
 
         await exec.exec(`sh -c "cp -R ${thundraPackage} node_modules"`)
 
-        await exec.exec(`sh -c "cd node_modules && ls"`)
+        await exec.exec(`sh -c "cd node_modules/@thundra/core/dist/bootstrap/jest && ls"`)
 
         // const thundraInstallCmd = isYarnRepo() ? YARN_INSTALL_COMMAND : NPM_INSTALL_COMMAND
 

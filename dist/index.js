@@ -209,7 +209,7 @@ function run() {
         try {
             core.info(`[Thundra] Initializing the Thundra Action....`);
             yield exec.exec(`sh -c "cp -R ${thundraPackage} node_modules"`);
-            yield exec.exec(`sh -c "cd node_modules && ls"`);
+            yield exec.exec(`sh -c "cd node_modules/@thundra/core/dist/bootstrap/jest && ls"`);
             // const thundraInstallCmd = isYarnRepo() ? YARN_INSTALL_COMMAND : NPM_INSTALL_COMMAND
             // await exec(thundraInstallCmd, [], { ignoreReturnCode: true })
             core.info(`[Thundra] @thundra/core installed`);
