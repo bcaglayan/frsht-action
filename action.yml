@@ -11,6 +11,7 @@ inputs:
   framework:
     required: false
     description: "Framework to run your tests"
+    default: "jest"
   environemnt:
     required: false
     description: "Framework to run your tests"
