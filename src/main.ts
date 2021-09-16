@@ -6,7 +6,7 @@ import * as exec from '@actions/exec'
 
 import { isYarnRepo } from './actions/helper'
 
-// const thundraPackage = '__tmp__/@thundra'
+const thundraPackage = '__tmp__/@thundra'
 
 const apikey: string = core.getInput('apikey')
 const project_id: string = core.getInput('project_id')
@@ -44,11 +44,13 @@ async function run(): Promise<void> {
     try {
         core.info(`[Thundra] Initializing the Thundra Action....`)
 
-        // await exec.exec(`sh -c "cp -R ${thundraPackage} node_modules"`)
-
         const thundraInstallCmd = isYarnRepo() ? YARN_INSTALL_COMMAND : NPM_INSTALL_COMMAND
 
         await exec.exec(thundraInstallCmd, [], { ignoreReturnCode: true })
+
+        await exec.exec(`sh -c "rm -rf node_modules/@thundra/"`)
+
+        await exec.exec(`sh -c "cp -R ${thundraPackage} node_modules"`)
 
         core.info(`[Thundra] @thundra/core installed`)
 
