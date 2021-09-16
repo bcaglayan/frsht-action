@@ -14,9 +14,11 @@ inputs:
   environemnt:
     required: false
     description: "Framework to run your tests"
+    default: "node"
   command:
     required: false
     description: "Command to run your tests"
+    default: "npm test"
 runs:
   using: "node12"
   main: "dist/index.js"
