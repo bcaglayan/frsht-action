@@ -1,4 +1,4 @@
-import exec from '@actions/exec'
+import * as exec from '@actions/exec'
 
 import fs from 'fs'
 
