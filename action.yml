@@ -20,6 +20,9 @@ inputs:
     required: false
     description: "Command to run your tests"
     default: "npm test"
+  agent_version:
+    required: false
+    description: "Use a specific version of the Thundra Agent"
 runs:
   using: "node12"
   main: "dist/index.js"

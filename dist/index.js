@@ -180,15 +180,15 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 const actions = __importStar(__webpack_require__(24));
 const core = __importStar(__webpack_require__(186));
 const exec = __importStar(__webpack_require__(514));
-/**
-import { isYarnRepo } from './actions/helper'
-const NPM_INSTALL_COMMAND = 'npm install --save-dev @thundra/core'
-const YARN_INSTALL_COMMAND = 'yarn add --dev @thundra/core'
-*/
-const thundraPackage = '__tmp__/@thundra';
+const helper_1 = __webpack_require__(884);
+// const thundraPackage = '__tmp__/@thundra'
 const apikey = core.getInput('apikey');
 const project_id = core.getInput('project_id');
 const framework = core.getInput('framework');
+const agent_version = core.getInput('agent_version');
+const thundraDep = agent_version ? `@thundra/core:${agent_version}` : '@thundra/core';
+const NPM_INSTALL_COMMAND = `npm install --save-dev ${thundraDep}`;
+const YARN_INSTALL_COMMAND = `yarn add --dev ${thundraDep}`;
 if (!apikey) {
     core.warning('Thundra API Key is not present. Exiting early...');
     core.warning('Instrumentation failed.');
@@ -209,10 +209,9 @@ function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             core.info(`[Thundra] Initializing the Thundra Action....`);
-            yield exec.exec(`sh -c "cp -R ${thundraPackage} node_modules"`);
-            yield exec.exec(`sh -c "cd node_modules/@thundra/core/dist/bootstrap/jest && ls"`);
-            // const thundraInstallCmd = isYarnRepo() ? YARN_INSTALL_COMMAND : NPM_INSTALL_COMMAND
-            // await exec(thundraInstallCmd, [], { ignoreReturnCode: true })
+            // await exec.exec(`sh -c "cp -R ${thundraPackage} node_modules"`)
+            const thundraInstallCmd = (0, helper_1.isYarnRepo)() ? YARN_INSTALL_COMMAND : NPM_INSTALL_COMMAND;
+            yield exec.exec(thundraInstallCmd, [], { ignoreReturnCode: true });
             core.info(`[Thundra] @thundra/core installed`);
             const action = actions.getAction(framework);
             if (!action) {
