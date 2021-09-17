@@ -48,9 +48,9 @@ async function run(): Promise<void> {
 
         await exec.exec(thundraInstallCmd, [], { ignoreReturnCode: true })
 
-        await exec.exec(`sh -c "rm -rf node_modules/@thundra/"`)
+        // await exec.exec(`sh -c "rm -rf node_modules/@thundra/"`)
 
-        await exec.exec(`sh -c "cp -R ${thundraPackage} node_modules"`)
+        // await exec.exec(`sh -c "cp -R ${thundraPackage} node_modules"`)
 
         core.info(`[Thundra] @thundra/core installed`)
 

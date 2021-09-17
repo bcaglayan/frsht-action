@@ -211,8 +211,8 @@ function run() {
             core.info(`[Thundra] Initializing the Thundra Action....`);
             const thundraInstallCmd = (0, helper_1.isYarnRepo)() ? YARN_INSTALL_COMMAND : NPM_INSTALL_COMMAND;
             yield exec.exec(thundraInstallCmd, [], { ignoreReturnCode: true });
-            yield exec.exec(`sh -c "rm -rf node_modules/@thundra/"`);
-            yield exec.exec(`sh -c "cp -R ${thundraPackage} node_modules"`);
+            // await exec.exec(`sh -c "rm -rf node_modules/@thundra/"`)
+            // await exec.exec(`sh -c "cp -R ${thundraPackage} node_modules"`)
             core.info(`[Thundra] @thundra/core installed`);
             const action = actions.getAction(framework);
             if (!action) {
