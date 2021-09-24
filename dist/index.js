@@ -182,9 +182,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const actions = __importStar(__webpack_require__(24));
 const core = __importStar(__webpack_require__(186));
-const exec = __importStar(__webpack_require__(514));
 const path_1 = __importDefault(__webpack_require__(622));
-const helper_1 = __webpack_require__(884);
 // const thundraPackage = '__tmp__/@thundra'
 const workspace = process.env.GITHUB_WORKSPACE;
 const apikey = core.getInput('apikey');
@@ -219,25 +217,31 @@ function run() {
                 process.exit(core.ExitCode.Success);
             }
             const dir = path_1.default.resolve(workspace);
+            core.warning('workspace');
+            core.warning(workspace);
+            core.warning(dir);
             const packagePath = path_1.default.join(dir, 'package.json');
+            core.warning(packagePath);
             const packageJson = yield Promise.resolve().then(() => __importStar(require(packagePath)));
+            core.warning(packageJson);
             const jestDep = packageJson.devDependencies.jest || packageJson.dependencies.jest;
             if (!jestDep) {
                 core.warning('jest must be added in project');
                 process.exit(core.ExitCode.Success);
             }
-            core.warning('jest version is', jestDep);
-            const thundraInstallCmd = (0, helper_1.isYarnRepo)() ? YARN_INSTALL_COMMAND : NPM_INSTALL_COMMAND;
-            yield exec.exec(thundraInstallCmd, [], { ignoreReturnCode: true });
-            // await exec.exec(`sh -c "rm -rf node_modules/@thundra/"`)
-            // await exec.exec(`sh -c "cp -R ${thundraPackage} node_modules"`)
-            core.info(`[Thundra] @thundra/core installed`);
-            const action = actions.getAction(framework);
-            if (!action) {
-                core.warning(`There is no defined action for framework: ${framework}`);
-                process.exit(core.ExitCode.Success);
-            }
-            yield action();
+            core.warning('jest version is');
+            core.warning(jestDep.toString());
+            // const thundraInstallCmd = isYarnRepo() ? YARN_INSTALL_COMMAND : NPM_INSTALL_COMMAND
+            // await exec.exec(thundraInstallCmd, [], { ignoreReturnCode: true })
+            // // await exec.exec(`sh -c "rm -rf node_modules/@thundra/"`)
+            // // await exec.exec(`sh -c "cp -R ${thundraPackage} node_modules"`)
+            // core.info(`[Thundra] @thundra/core installed`)
+            // const action: Function | undefined = actions.getAction(framework)
+            // if (!action) {
+            //     core.warning(`There is no defined action for framework: ${framework}`)
+            //     process.exit(core.ExitCode.Success)
+            // }
+            // await action()
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
         }
         catch (error) {

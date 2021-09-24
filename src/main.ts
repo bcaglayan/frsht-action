@@ -79,24 +79,24 @@ async function run(): Promise<void> {
 
         core.warning(jestDep.toString())
 
-        const thundraInstallCmd = isYarnRepo() ? YARN_INSTALL_COMMAND : NPM_INSTALL_COMMAND
+        // const thundraInstallCmd = isYarnRepo() ? YARN_INSTALL_COMMAND : NPM_INSTALL_COMMAND
 
-        await exec.exec(thundraInstallCmd, [], { ignoreReturnCode: true })
+        // await exec.exec(thundraInstallCmd, [], { ignoreReturnCode: true })
 
-        // await exec.exec(`sh -c "rm -rf node_modules/@thundra/"`)
+        // // await exec.exec(`sh -c "rm -rf node_modules/@thundra/"`)
 
-        // await exec.exec(`sh -c "cp -R ${thundraPackage} node_modules"`)
+        // // await exec.exec(`sh -c "cp -R ${thundraPackage} node_modules"`)
 
-        core.info(`[Thundra] @thundra/core installed`)
+        // core.info(`[Thundra] @thundra/core installed`)
 
-        const action: Function | undefined = actions.getAction(framework)
-        if (!action) {
-            core.warning(`There is no defined action for framework: ${framework}`)
+        // const action: Function | undefined = actions.getAction(framework)
+        // if (!action) {
+        //     core.warning(`There is no defined action for framework: ${framework}`)
 
-            process.exit(core.ExitCode.Success)
-        }
+        //     process.exit(core.ExitCode.Success)
+        // }
 
-        await action()
+        // await action()
 
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
