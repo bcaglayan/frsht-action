@@ -78,7 +78,7 @@ async function run(): Promise<void> {
 
         core.warning(jestDep.toString())
 
-        const jestCircusDep = packageJson.devDependencies['jest-circus'] || packageJson.dependencies.jest['jest-circus']
+        const jestCircusDep = packageJson.devDependencies['jest-circus'] || packageJson.dependencies['jest-circus']
         if (!jestCircusDep) {
             core.warning(`jest circus will be installed`)
             await exec.exec(`npm install --save-dev jest-circus@${jestDep}`, [], { ignoreReturnCode: true })
