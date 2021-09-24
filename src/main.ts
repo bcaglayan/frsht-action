@@ -55,8 +55,18 @@ async function run(): Promise<void> {
 
         const dir = Path.resolve(workspace)
 
+        core.warning('workspace')
+
+        core.warning(workspace)
+
+        core.warning(dir)
+
         const packagePath = Path.join(dir, 'package.json')
+
+        core.warning(packagePath)
         const packageJson = await import(packagePath)
+
+        core.warning(packageJson)
 
         const jestDep = packageJson.devDependencies.jest || packageJson.dependencies.jest
         if (!jestDep) {
@@ -65,7 +75,9 @@ async function run(): Promise<void> {
             process.exit(core.ExitCode.Success)
         }
 
-        core.warning('jest version is', jestDep.toString())
+        core.warning('jest version is')
+
+        core.warning(jestDep.toString())
 
         const thundraInstallCmd = isYarnRepo() ? YARN_INSTALL_COMMAND : NPM_INSTALL_COMMAND
 
