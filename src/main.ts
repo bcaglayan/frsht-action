@@ -5,7 +5,7 @@ import * as core from '@actions/core'
 import * as exec from '@actions/exec'
 import Path from 'path'
 
-import { isYarnRepo } from './actions/helper'
+import { isYarnRepo, isValidVersion } from './actions/helper'
 
 // const thundraPackage = '__tmp__/@thundra'
 
@@ -55,18 +55,9 @@ async function run(): Promise<void> {
 
         const dir = Path.resolve(workspace)
 
-        core.warning('workspace')
-
-        core.warning(workspace)
-
-        core.warning(dir)
-
         const packagePath = Path.join(dir, 'package.json')
 
-        core.warning(packagePath)
         const packageJson = await import(packagePath)
-
-        core.warning(packageJson)
 
         const jestDep = packageJson.devDependencies.jest || packageJson.dependencies.jest
         if (!jestDep) {
@@ -78,6 +69,10 @@ async function run(): Promise<void> {
         core.warning('jest version is')
 
         core.warning(jestDep.toString())
+
+        core.warning(isValidVersion(jestDep.toString(), '^25.1.0').toString())
+
+        core.warning(isValidVersion(jestDep.toString(), '^24.0.0').toString())
 
         // const thundraInstallCmd = isYarnRepo() ? YARN_INSTALL_COMMAND : NPM_INSTALL_COMMAND
 
