@@ -231,7 +231,8 @@ if (!actions.isValidFramework(framework) || !actions.isValidFramework(framework.
     process.exit(core.ExitCode.Success);
 }
 if (agent_version && semver.lt(agent_version, constants_1.MIN_THUNDRA_AGENT_VERSION)) {
-    core.setFailed(`Thundra Java Agent prior to 2.7.0 doesn't work with this action`);
+    core.setFailed(`Thundra Nodejs Agent prior to ${agent_version} doesn't work with this action`);
+    process.exit(core.ExitCode.Success);
 }
 core.exportVariable('THUNDRA_APIKEY', apikey);
 core.exportVariable('THUNDRA_AGENT_TEST_PROJECT_ID', project_id);
