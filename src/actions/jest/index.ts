@@ -27,11 +27,18 @@ export default async function run(): Promise<void> {
         process.exit(core.ExitCode.Success)
     }
 
+    core.warning(jestVersion)
+
     const jestCircusVersion = await Helper.getDependencyVersion('jest-circus')
+    core.warning('jestCircusVersion')
+    core.warning(jestCircusVersion)
     if (!jestCircusVersion) {
         const jestCircusInstallCmd = Helper.isYarnRepo()
             ? Helper.createYarnAddCommand(`jest-circus@${jestVersion}`)
             : Helper.createNpmInstallCommand(`jest-circus@${jestVersion}`)
+
+        core.warning('jestCircusInstallCmd')
+        core.warning(jestCircusInstallCmd)
 
         await exec.exec(jestCircusInstallCmd, [], { ignoreReturnCode: true })
     }
