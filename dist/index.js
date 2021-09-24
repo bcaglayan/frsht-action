@@ -2,6 +2,18 @@ require('./sourcemap-register.js');module.exports =
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
+/***/ 3766:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.MIN_THUNDRA_AGENT_VERSION = void 0;
+exports.MIN_THUNDRA_AGENT_VERSION = '2.12.19';
+
+
+/***/ }),
+
 /***/ 7884:
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
@@ -190,8 +202,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const actions = __importStar(__webpack_require__(9024));
 const core = __importStar(__webpack_require__(2186));
+const exec = __importStar(__webpack_require__(1514));
 const path_1 = __importDefault(__webpack_require__(5622));
+const semver = __importStar(__webpack_require__(1383));
 const helper_1 = __webpack_require__(7884);
+const constants_1 = __webpack_require__(3766);
 // const thundraPackage = '__tmp__/@thundra'
 const workspace = process.env.GITHUB_WORKSPACE;
 const apikey = core.getInput('apikey');
@@ -215,6 +230,9 @@ if (!actions.isValidFramework(framework) || !actions.isValidFramework(framework.
     core.warning('Framework must be take one of these values: jest...');
     process.exit(core.ExitCode.Success);
 }
+if (agent_version && semver.lt(agent_version, constants_1.MIN_THUNDRA_AGENT_VERSION)) {
+    core.setFailed(`Thundra Java Agent prior to 2.7.0 doesn't work with this action`);
+}
 core.exportVariable('THUNDRA_APIKEY', apikey);
 core.exportVariable('THUNDRA_AGENT_TEST_PROJECT_ID', project_id);
 function run() {
@@ -235,19 +253,22 @@ function run() {
             }
             core.warning('jest version is');
             core.warning(jestDep.toString());
-            core.warning((0, helper_1.isValidVersion)(jestDep.toString(), '^25.1.0').toString());
-            core.warning((0, helper_1.isValidVersion)(jestDep.toString(), '^24.0.0').toString());
-            // const thundraInstallCmd = isYarnRepo() ? YARN_INSTALL_COMMAND : NPM_INSTALL_COMMAND
-            // await exec.exec(thundraInstallCmd, [], { ignoreReturnCode: true })
-            // // await exec.exec(`sh -c "rm -rf node_modules/@thundra/"`)
-            // // await exec.exec(`sh -c "cp -R ${thundraPackage} node_modules"`)
-            // core.info(`[Thundra] @thundra/core installed`)
-            // const action: Function | undefined = actions.getAction(framework)
-            // if (!action) {
-            //     core.warning(`There is no defined action for framework: ${framework}`)
-            //     process.exit(core.ExitCode.Success)
-            // }
-            // await action()
+            const jestCircusDep = packageJson.devDependencies['jest-circus'] || packageJson.dependencies.jest['jest-circus'];
+            if (!jestCircusDep) {
+                core.warning(`jest circus will be installed`);
+                yield exec.exec(`npm install --save-dev jest-circus@${jestDep}`, [], { ignoreReturnCode: true });
+            }
+            const thundraInstallCmd = (0, helper_1.isYarnRepo)() ? YARN_INSTALL_COMMAND : NPM_INSTALL_COMMAND;
+            yield exec.exec(thundraInstallCmd, [], { ignoreReturnCode: true });
+            // await exec.exec(`sh -c "rm -rf node_modules/@thundra/"`)
+            // await exec.exec(`sh -c "cp -R ${thundraPackage} node_modules"`)
+            core.info(`[Thundra] @thundra/core installed`);
+            const action = actions.getAction(framework);
+            if (!action) {
+                core.warning(`There is no defined action for framework: ${framework}`);
+                process.exit(core.ExitCode.Success);
+            }
+            yield action();
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
         }
         catch (error) {

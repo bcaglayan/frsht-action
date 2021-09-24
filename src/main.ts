@@ -5,7 +5,11 @@ import * as core from '@actions/core'
 import * as exec from '@actions/exec'
 import Path from 'path'
 
+import * as semver from 'semver'
+
 import { isYarnRepo, isValidVersion } from './actions/helper'
+
+import { MIN_THUNDRA_AGENT_VERSION } from './actions/constants'
 
 // const thundraPackage = '__tmp__/@thundra'
 
@@ -40,6 +44,10 @@ if (!actions.isValidFramework(framework) || !actions.isValidFramework(framework.
     process.exit(core.ExitCode.Success)
 }
 
+if (agent_version && semver.lt(agent_version, MIN_THUNDRA_AGENT_VERSION)) {
+    core.setFailed(`Thundra Java Agent prior to 2.7.0 doesn't work with this action`)
+}
+
 core.exportVariable('THUNDRA_APIKEY', apikey)
 core.exportVariable('THUNDRA_AGENT_TEST_PROJECT_ID', project_id)
 
@@ -70,28 +78,30 @@ async function run(): Promise<void> {
 
         core.warning(jestDep.toString())
 
-        core.warning(isValidVersion(jestDep.toString(), '^25.1.0').toString())
+        const jestCircusDep = packageJson.devDependencies['jest-circus'] || packageJson.dependencies.jest['jest-circus']
+        if (!jestCircusDep) {
+            core.warning(`jest circus will be installed`)
+            await exec.exec(`npm install --save-dev jest-circus@${jestDep}`, [], { ignoreReturnCode: true })
+        }
 
-        core.warning(isValidVersion(jestDep.toString(), '^24.0.0').toString())
+        const thundraInstallCmd = isYarnRepo() ? YARN_INSTALL_COMMAND : NPM_INSTALL_COMMAND
 
-        // const thundraInstallCmd = isYarnRepo() ? YARN_INSTALL_COMMAND : NPM_INSTALL_COMMAND
+        await exec.exec(thundraInstallCmd, [], { ignoreReturnCode: true })
 
-        // await exec.exec(thundraInstallCmd, [], { ignoreReturnCode: true })
+        // await exec.exec(`sh -c "rm -rf node_modules/@thundra/"`)
 
-        // // await exec.exec(`sh -c "rm -rf node_modules/@thundra/"`)
+        // await exec.exec(`sh -c "cp -R ${thundraPackage} node_modules"`)
 
-        // // await exec.exec(`sh -c "cp -R ${thundraPackage} node_modules"`)
+        core.info(`[Thundra] @thundra/core installed`)
 
-        // core.info(`[Thundra] @thundra/core installed`)
+        const action: Function | undefined = actions.getAction(framework)
+        if (!action) {
+            core.warning(`There is no defined action for framework: ${framework}`)
 
-        // const action: Function | undefined = actions.getAction(framework)
-        // if (!action) {
-        //     core.warning(`There is no defined action for framework: ${framework}`)
+            process.exit(core.ExitCode.Success)
+        }
 
-        //     process.exit(core.ExitCode.Success)
-        // }
-
-        // await action()
+        await action()
 
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
