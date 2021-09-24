@@ -2,19 +2,7 @@ require('./sourcemap-register.js');module.exports =
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
-/***/ 3766:
-/***/ ((__unused_webpack_module, exports) => {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.MIN_THUNDRA_AGENT_VERSION = void 0;
-exports.MIN_THUNDRA_AGENT_VERSION = '2.12.19';
-
-
-/***/ }),
-
-/***/ 7884:
+/***/ 8276:
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 "use strict";
@@ -47,22 +35,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.runTests = exports.isYarnRepo = exports.isValidVersion = void 0;
+exports.runTests = void 0;
 const exec = __importStar(__webpack_require__(1514));
-const fs_1 = __importDefault(__webpack_require__(5747));
-const semver_1 = __webpack_require__(1383);
-const isValidVersion = (versionScr, versionTrg) => {
-    return (0, semver_1.satisfies)(versionScr, versionTrg);
-};
-exports.isValidVersion = isValidVersion;
-function isYarnRepo() {
-    return fs_1.default.existsSync('yarn.lock');
-}
-exports.isYarnRepo = isYarnRepo;
 function runTests(command, args, envVariables = {}) {
     return __awaiter(this, void 0, void 0, function* () {
         return exec.exec(command, args, {
@@ -71,6 +46,79 @@ function runTests(command, args, envVariables = {}) {
     });
 }
 exports.runTests = runTests;
+
+
+/***/ }),
+
+/***/ 6297:
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+/* eslint-disable sort-imports */
+/* eslint-disable i18n-text/no-en */
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.isYarnRepo = exports.createYarnAddCommand = exports.createNpmInstallCommand = exports.getDependencyVersion = void 0;
+const core = __importStar(__webpack_require__(2186));
+const fs_1 = __importDefault(__webpack_require__(5747));
+const path_1 = __importDefault(__webpack_require__(5622));
+const workspace = process.env.GITHUB_WORKSPACE;
+if (!workspace) {
+    core.warning('There is no defined workspace');
+    process.exit(core.ExitCode.Success);
+}
+const dir = path_1.default.resolve(workspace);
+const packagePath = path_1.default.join(dir, 'package.json');
+function getDependencyVersion(dependency) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const packageJson = yield Promise.resolve().then(() => __importStar(require(packagePath)));
+        return packageJson.devDependencies[dependency] || packageJson.dependencies[dependency];
+    });
+}
+exports.getDependencyVersion = getDependencyVersion;
+function createNpmInstallCommand(dependency) {
+    return `npm install --save-dev ${dependency}`;
+}
+exports.createNpmInstallCommand = createNpmInstallCommand;
+function createYarnAddCommand(dependency) {
+    return `yarn add --dev ${dependency}`;
+}
+exports.createYarnAddCommand = createYarnAddCommand;
+function isYarnRepo() {
+    return fs_1.default.existsSync('yarn.lock');
+}
+exports.isYarnRepo = isYarnRepo;
 
 
 /***/ }),
@@ -109,6 +157,8 @@ exports.getAction = getAction;
 
 "use strict";
 
+/* eslint-disable i18n-text/no-en */
+/* eslint-disable sort-imports */
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
     Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
@@ -139,7 +189,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const core = __importStar(__webpack_require__(2186));
-const runTestHelper = __importStar(__webpack_require__(7884));
+const exec = __importStar(__webpack_require__(1514));
+const Helper = __importStar(__webpack_require__(6297));
+const execute_test_1 = __webpack_require__(8276);
 const THUNDRA_JEST_JSDOM_ENVIRONMENT = '--env=@thundra/core/dist/bootstrap/jest/JestEnvironmentJsdom.js';
 const THUNDRA_JEST_NODE_ENVIRONMENT = '--env=@thundra/core/dist/bootstrap/jest/JestEnvironmentNode.js';
 const JEST_DEFAULT_ARGUMENTS = ['--testRunner=jest-circus/runner'];
@@ -148,16 +200,40 @@ const command = core.getInput('command');
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         core.info(`[Thundra] Jest will run test for environment ${environment}...`);
+        const jestVersion = Helper.getDependencyVersion('jest');
+        if (!jestVersion) {
+            core.warning(`Jest must be added in project`);
+            process.exit(core.ExitCode.Success);
+        }
+        const jestCircusVersion = Helper.getDependencyVersion('jest-circus');
+        if (!jestCircusVersion) {
+            const thundraInstallCmd = Helper.isYarnRepo()
+                ? Helper.createYarnAddCommand(`jest-circus@${jestVersion}`)
+                : Helper.createNpmInstallCommand(`jest-circus@${jestVersion}`);
+            yield exec.exec(thundraInstallCmd, [], { ignoreReturnCode: true });
+        }
         environment === 'node'
             ? JEST_DEFAULT_ARGUMENTS.push(THUNDRA_JEST_NODE_ENVIRONMENT)
             : environment === 'jsdom'
                 ? JEST_DEFAULT_ARGUMENTS.push(THUNDRA_JEST_JSDOM_ENVIRONMENT)
                 : undefined;
-        const args = runTestHelper.isYarnRepo() ? JEST_DEFAULT_ARGUMENTS : ['--', ...JEST_DEFAULT_ARGUMENTS];
-        yield runTestHelper.runTests(command, args);
+        const args = Helper.isYarnRepo() ? JEST_DEFAULT_ARGUMENTS : ['--', ...JEST_DEFAULT_ARGUMENTS];
+        yield (0, execute_test_1.runTests)(command, args);
     });
 }
 exports.default = run;
+
+
+/***/ }),
+
+/***/ 7306:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.MIN_THUNDRA_AGENT_VERSION = void 0;
+exports.MIN_THUNDRA_AGENT_VERSION = '2.12.19';
 
 
 /***/ }),
@@ -167,6 +243,7 @@ exports.default = run;
 
 "use strict";
 
+/* eslint-disable sort-imports */
 /* eslint-disable i18n-text/no-en */
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
@@ -196,26 +273,18 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const actions = __importStar(__webpack_require__(9024));
 const core = __importStar(__webpack_require__(2186));
 const exec = __importStar(__webpack_require__(1514));
-const path_1 = __importDefault(__webpack_require__(5622));
 const semver = __importStar(__webpack_require__(1383));
-const helper_1 = __webpack_require__(7884);
-const constants_1 = __webpack_require__(3766);
-// const thundraPackage = '__tmp__/@thundra'
-const workspace = process.env.GITHUB_WORKSPACE;
+const Helper = __importStar(__webpack_require__(6297));
+const constants_1 = __webpack_require__(7306);
 const apikey = core.getInput('apikey');
 const project_id = core.getInput('project_id');
 const framework = core.getInput('framework');
 const agent_version = core.getInput('agent_version');
 const thundraDep = agent_version ? `@thundra/core@${agent_version}` : '@thundra/core';
-const NPM_INSTALL_COMMAND = `npm install --save-dev ${thundraDep}`;
-const YARN_INSTALL_COMMAND = `yarn add --dev ${thundraDep}`;
 if (!apikey) {
     core.warning('Thundra API Key is not present. Exiting early...');
     core.warning('Instrumentation failed.');
@@ -226,12 +295,12 @@ if (!project_id) {
     core.warning('Instrumentation failed.');
     process.exit(core.ExitCode.Success);
 }
-if (!actions.isValidFramework(framework) || !actions.isValidFramework(framework.toLowerCase())) {
-    core.warning('Framework must be take one of these values: jest...');
-    process.exit(core.ExitCode.Success);
-}
 if (agent_version && semver.lt(agent_version, constants_1.MIN_THUNDRA_AGENT_VERSION)) {
     core.setFailed(`Thundra Nodejs Agent prior to ${agent_version} doesn't work with this action`);
+    process.exit(core.ExitCode.Success);
+}
+if (!actions.isValidFramework(framework) || !actions.isValidFramework(framework.toLowerCase())) {
+    core.warning('Framework must be take one of these values: jest...');
     process.exit(core.ExitCode.Success);
 }
 core.exportVariable('THUNDRA_APIKEY', apikey);
@@ -240,29 +309,10 @@ function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             core.info(`[Thundra] Initializing the Thundra Action....`);
-            if (!workspace) {
-                core.warning('There is no defined workspace');
-                process.exit(core.ExitCode.Success);
-            }
-            const dir = path_1.default.resolve(workspace);
-            const packagePath = path_1.default.join(dir, 'package.json');
-            const packageJson = yield Promise.resolve().then(() => __importStar(require(packagePath)));
-            const jestDep = packageJson.devDependencies.jest || packageJson.dependencies.jest;
-            if (!jestDep) {
-                core.warning('jest must be added in project');
-                process.exit(core.ExitCode.Success);
-            }
-            core.warning('jest version is');
-            core.warning(jestDep.toString());
-            const jestCircusDep = packageJson.devDependencies['jest-circus'] || packageJson.dependencies['jest-circus'];
-            if (!jestCircusDep) {
-                core.warning(`jest circus will be installed`);
-                yield exec.exec(`npm install --save-dev jest-circus@${jestDep}`, [], { ignoreReturnCode: true });
-            }
-            const thundraInstallCmd = (0, helper_1.isYarnRepo)() ? YARN_INSTALL_COMMAND : NPM_INSTALL_COMMAND;
+            const thundraInstallCmd = Helper.isYarnRepo()
+                ? Helper.createYarnAddCommand(thundraDep)
+                : Helper.createNpmInstallCommand(thundraDep);
             yield exec.exec(thundraInstallCmd, [], { ignoreReturnCode: true });
-            // await exec.exec(`sh -c "rm -rf node_modules/@thundra/"`)
-            // await exec.exec(`sh -c "cp -R ${thundraPackage} node_modules"`)
             core.info(`[Thundra] @thundra/core installed`);
             const action = actions.getAction(framework);
             if (!action) {
