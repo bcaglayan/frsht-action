@@ -200,17 +200,22 @@ const command = core.getInput('command');
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         core.info(`[Thundra] Jest will run test for environment ${environment}...`);
-        const jestVersion = Helper.getDependencyVersion('jest');
+        const jestVersion = yield Helper.getDependencyVersion('jest');
         if (!jestVersion) {
             core.warning(`Jest must be added in project`);
             process.exit(core.ExitCode.Success);
         }
-        const jestCircusVersion = Helper.getDependencyVersion('jest-circus');
+        core.warning(jestVersion);
+        const jestCircusVersion = yield Helper.getDependencyVersion('jest-circus');
+        core.warning('jestCircusVersion');
+        core.warning(jestCircusVersion);
         if (!jestCircusVersion) {
-            const thundraInstallCmd = Helper.isYarnRepo()
+            const jestCircusInstallCmd = Helper.isYarnRepo()
                 ? Helper.createYarnAddCommand(`jest-circus@${jestVersion}`)
                 : Helper.createNpmInstallCommand(`jest-circus@${jestVersion}`);
-            yield exec.exec(thundraInstallCmd, [], { ignoreReturnCode: true });
+            core.warning('jestCircusInstallCmd');
+            core.warning(jestCircusInstallCmd);
+            yield exec.exec(jestCircusInstallCmd, [], { ignoreReturnCode: true });
         }
         environment === 'node'
             ? JEST_DEFAULT_ARGUMENTS.push(THUNDRA_JEST_NODE_ENVIRONMENT)
@@ -296,7 +301,7 @@ if (!project_id) {
     process.exit(core.ExitCode.Success);
 }
 if (agent_version && semver.lt(agent_version, constants_1.MIN_THUNDRA_AGENT_VERSION)) {
-    core.setFailed(`Thundra Nodejs Agent prior to ${agent_version} doesn't work with this action`);
+    core.warning(`Thundra Nodejs Agent prior to ${agent_version} doesn't work with this action`);
     process.exit(core.ExitCode.Success);
 }
 if (!actions.isValidFramework(framework) || !actions.isValidFramework(framework.toLowerCase())) {
