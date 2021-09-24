@@ -20,20 +20,20 @@ const command: string = core.getInput('command')
 export default async function run(): Promise<void> {
     core.info(`[Thundra] Jest will run test for environment ${environment}...`)
 
-    const jestVersion = Helper.getDependencyVersion('jest')
+    const jestVersion = await Helper.getDependencyVersion('jest')
     if (!jestVersion) {
         core.warning(`Jest must be added in project`)
 
         process.exit(core.ExitCode.Success)
     }
 
-    const jestCircusVersion = Helper.getDependencyVersion('jest-circus')
+    const jestCircusVersion = await Helper.getDependencyVersion('jest-circus')
     if (!jestCircusVersion) {
-        const thundraInstallCmd = Helper.isYarnRepo()
+        const jestCircusInstallCmd = Helper.isYarnRepo()
             ? Helper.createYarnAddCommand(`jest-circus@${jestVersion}`)
             : Helper.createNpmInstallCommand(`jest-circus@${jestVersion}`)
 
-        await exec.exec(thundraInstallCmd, [], { ignoreReturnCode: true })
+        await exec.exec(jestCircusInstallCmd, [], { ignoreReturnCode: true })
     }
 
     environment === 'node'
