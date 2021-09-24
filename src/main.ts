@@ -65,7 +65,7 @@ async function run(): Promise<void> {
             process.exit(core.ExitCode.Success)
         }
 
-        core.warning('jest version is', jestDep)
+        core.warning('jest version is', jestDep.toString())
 
         const thundraInstallCmd = isYarnRepo() ? YARN_INSTALL_COMMAND : NPM_INSTALL_COMMAND
 
