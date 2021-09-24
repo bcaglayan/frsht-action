@@ -176,12 +176,17 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const actions = __importStar(__webpack_require__(24));
 const core = __importStar(__webpack_require__(186));
 const exec = __importStar(__webpack_require__(514));
+const path_1 = __importDefault(__webpack_require__(622));
 const helper_1 = __webpack_require__(884);
-const thundraPackage = '__tmp__/@thundra';
+// const thundraPackage = '__tmp__/@thundra'
+const workspace = process.env.GITHUB_WORKSPACE;
 const apikey = core.getInput('apikey');
 const project_id = core.getInput('project_id');
 const framework = core.getInput('framework');
@@ -209,6 +214,19 @@ function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             core.info(`[Thundra] Initializing the Thundra Action....`);
+            if (!workspace) {
+                core.warning('There is no defined workspace');
+                process.exit(core.ExitCode.Success);
+            }
+            const dir = path_1.default.resolve(workspace);
+            const packagePath = path_1.default.join(dir, 'package.json');
+            const packageJson = yield Promise.resolve().then(() => __importStar(require(packagePath)));
+            const jestDep = packageJson.devDependencies.jest || packageJson.dependencies.jest;
+            if (!jestDep) {
+                core.warning('jest must be added in project');
+                process.exit(core.ExitCode.Success);
+            }
+            core.warning('jest version is', jestDep);
             const thundraInstallCmd = (0, helper_1.isYarnRepo)() ? YARN_INSTALL_COMMAND : NPM_INSTALL_COMMAND;
             yield exec.exec(thundraInstallCmd, [], { ignoreReturnCode: true });
             // await exec.exec(`sh -c "rm -rf node_modules/@thundra/"`)

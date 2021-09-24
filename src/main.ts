@@ -3,10 +3,13 @@
 import * as actions from './actions/index'
 import * as core from '@actions/core'
 import * as exec from '@actions/exec'
+import Path from 'path'
 
 import { isYarnRepo } from './actions/helper'
 
-const thundraPackage = '__tmp__/@thundra'
+// const thundraPackage = '__tmp__/@thundra'
+
+const workspace = process.env.GITHUB_WORKSPACE
 
 const apikey: string = core.getInput('apikey')
 const project_id: string = core.getInput('project_id')
@@ -43,6 +46,26 @@ core.exportVariable('THUNDRA_AGENT_TEST_PROJECT_ID', project_id)
 async function run(): Promise<void> {
     try {
         core.info(`[Thundra] Initializing the Thundra Action....`)
+
+        if (!workspace) {
+            core.warning('There is no defined workspace')
+
+            process.exit(core.ExitCode.Success)
+        }
+
+        const dir = Path.resolve(workspace)
+
+        const packagePath = Path.join(dir, 'package.json')
+        const packageJson = await import(packagePath)
+
+        const jestDep = packageJson.devDependencies.jest || packageJson.dependencies.jest
+        if (!jestDep) {
+            core.warning('jest must be added in project')
+
+            process.exit(core.ExitCode.Success)
+        }
+
+        core.warning('jest version is', jestDep)
 
         const thundraInstallCmd = isYarnRepo() ? YARN_INSTALL_COMMAND : NPM_INSTALL_COMMAND
 
